@@ -14,7 +14,7 @@ RUN npm install --omit=dev --no-audit --no-fund
 
 # Source files. `tsconfig.json` is required at runtime because the entry point is executed via
 # `tsx`, which reads it for path resolution and emit-free type stripping.
-COPY --chown=node:node tsconfig.json ./
+COPY --chown=node:node tsconfig.json INSTRUCTIONS.md ./
 COPY --chown=node:node src ./src
 
 ENV NODE_ENV=production

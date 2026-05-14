@@ -10,7 +10,7 @@ export function register(server: McpServer, client: FreeScoutClient, options: Cr
     {
       title: 'Add Conversation Note',
       description:
-        'Add an internal note to a FreeScout conversation. Notes are visible to agents only and are never emailed to the customer. The note cannot be edited or deleted via this tool.',
+        'Add an internal note to a FreeScout conversation. Notes are visible to agents only and are never emailed to the customer.',
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,

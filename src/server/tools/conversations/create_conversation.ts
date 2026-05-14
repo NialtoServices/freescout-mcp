@@ -10,7 +10,7 @@ export function register(server: McpServer, client: FreeScoutClient, options: Cr
     {
       title: 'Create Conversation',
       description:
-        'Create a new outbound conversation with a customer, seeded with a draft initial message for human review. The draft is **not sent** — a human must publish it in FreeScout to actually email the customer. The draft cannot be edited or deleted through this tool; if you create one in error, mention this clearly so the human knows to discard it.',
+        'Create a new outbound conversation with a customer, seeded with a draft initial message. Saved as a draft for human review; does not send email.',
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,

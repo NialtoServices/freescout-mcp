@@ -10,7 +10,7 @@ export function register(server: McpServer, client: FreeScoutClient, options: Cr
     {
       title: 'Draft Conversation Reply',
       description:
-        'Create a draft customer-facing reply on a FreeScout conversation for human review. The draft cannot be edited or deleted through this tool — a human must publish or discard it in FreeScout. Does not send email. Only create a draft when you are confident in its contents; if you create one in error, mention this clearly so the human knows to discard it.',
+        'Create a draft customer-facing reply on a FreeScout conversation. Saved as a draft for human review; does not send email.',
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,

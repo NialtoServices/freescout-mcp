@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { McpServer, type ServerContext } from '@modelcontextprotocol/server'
 import { version } from '../../package.json'
 import { type Client, type User } from '../lib/freescout'
@@ -19,6 +21,9 @@ export interface CreateMCPServerOptions {
   getCurrentUser: (context: ServerContext) => User
 }
 
+const INSTRUCTIONS_PATH = fileURLToPath(new URL('../../INSTRUCTIONS.md', import.meta.url))
+const SERVER_INSTRUCTIONS = readFileSync(INSTRUCTIONS_PATH, 'utf8')
+
 /**
  * Builds the MCP server for the given FreeScout client and identity-resolution options.
  *
@@ -27,7 +32,7 @@ export interface CreateMCPServerOptions {
  * @returns Configured MCP server ready to be connected to a transport.
  */
 export function createMCPServer(client: Client, options: CreateMCPServerOptions): McpServer {
-  const server = new McpServer({ name: 'freescout-mcp', version })
+  const server = new McpServer({ name: 'freescout-mcp', version }, { instructions: SERVER_INSTRUCTIONS })
   registerTools(server, client, options)
   return server
 }

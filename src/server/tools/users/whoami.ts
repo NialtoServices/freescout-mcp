@@ -9,8 +9,7 @@ export function register(server: McpServer, _client: FreeScoutClient, options: C
     'whoami',
     {
       title: 'Who Am I',
-      description:
-        'Returns the FreeScout user identity of the caller of this MCP server. Use this whenever the user asks about "my" conversations, "my" assignments, or anything else that requires knowing the calling user\'s FreeScout user ID, name, or email.',
+      description: "Returns the FreeScout user identity (ID, name, email) of the caller of this MCP server.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,

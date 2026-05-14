@@ -18,7 +18,7 @@ export function register(server: McpServer, client: FreeScoutClient, _options: C
     {
       title: 'List Conversations',
       description:
-        'List, filter, and search conversations in the FreeScout instance. Use `subject` for case-insensitive substring search on conversation subjects, and other filters to narrow by mailbox, assignee, customer, status, tag, date range, etc. Note: searching the body/thread content of conversations is not supported by the FreeScout API — subject text is the only searchable free-text field.',
+        'List, filter, and search conversations. Use `subject` for case-insensitive substring search on subjects; other filters narrow by mailbox, assignee, customer, status, tag, date range, etc.',
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -36,12 +36,10 @@ export function register(server: McpServer, client: FreeScoutClient, _options: C
         folderId: z.number().int().min(1).optional().describe('Limit results to a single mailbox folder (exact match)'),
         status: z.array(ConversationStatusSchema).optional().describe('One or more conversation statuses to include'),
         assignedTo: z
-          .number()
-          .int()
-          .min(1)
+          .union([z.number().int().min(1), z.literal('anyone')])
           .optional()
           .describe(
-            'FreeScout user ID the conversation is assigned to (exact match). Use `whoami` to find your own user ID.'
+            'FreeScout user ID the conversation is assigned to, or the literal string `"anyone"` to match conversations with no assignee. Use `whoami` to find your own user ID.'
           ),
         customerId: z.number().int().min(1).optional().describe('Limit results to a single customer (exact match)'),
         customerEmail: z
