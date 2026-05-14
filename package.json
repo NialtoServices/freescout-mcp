@@ -1,0 +1,42 @@
+{
+  "name": "@nialtoservices/freescout-mcp",
+  "version": "1.0.0",
+  "description": "An HTTP-based MCP server that provides access to FreeScout via the API module.",
+  "author": "Toby Herbert",
+  "keywords": [
+    "freescout",
+    "mcp"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/nialtoservices/freescout-mcp",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "cli": "node --import tsx src/index.ts",
+    "format": "prettier --write 'src/**/*.ts'",
+    "format:check": "prettier --check 'src/**/*.ts'",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@cfworker/json-schema": "^4.1.1",
+    "@hono/node-server": "^2.0.2",
+    "@modelcontextprotocol/hono": "^2.0.0-alpha.2",
+    "@modelcontextprotocol/server": "^2.0.0-alpha.2",
+    "commander": "^14.0.3",
+    "hono": "^4.12.9",
+    "jose": "^6.2.3",
+    "luxon": "^3.7.2",
+    "tsx": "^4.21.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/luxon": "^3.7.1",
+    "@types/ms": "^2.1.0",
+    "@types/node": "^25.5.0",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  }
+}

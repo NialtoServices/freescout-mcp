@@ -1,0 +1,36 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Editor / OS noise
+.editorconfig
+.vscode
+.idea
+.DS_Store
+*.swp
+
+# Dependencies (we install inside the image)
+node_modules
+
+# Build artefacts and local-only output
+dist
+build
+
+# CI / docs / vendored source dumps
+.github
+.claude
+*.md
+freescout
+
+# Local environment / logs
+.env
+.env.*
+*.log
+
+# Prettier config is needed only at format time, not at runtime
+.prettierrc
+
+# Test artefacts
+coverage
+.vitest
