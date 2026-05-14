@@ -3,6 +3,7 @@ import { Client as FreeScoutClient } from '../../../lib/freescout'
 import { CreateMCPServerOptions } from '../../index'
 import { register as registerAddConversationNote } from './add_conversation_note'
 import { register as registerCreateConversation } from './create_conversation'
+import { register as registerDeleteConversation } from './delete_conversation'
 import { register as registerDraftConversationReply } from './draft_conversation_reply'
 import { register as registerGetConversation } from './get_conversation'
 import { register as registerListConversationTimelogs } from './list_conversation_timelogs'
@@ -33,4 +34,5 @@ export function registerConversationTools(
   registerListConversationTimelogs(server, client, options)
   registerUpdateConversationTags(server, client, options)
   registerUpdateConversationCustomFields(server, client, options)
+  registerDeleteConversation(server, client, options)
 }

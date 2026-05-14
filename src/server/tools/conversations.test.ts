@@ -280,6 +280,21 @@ describe('conversation tools', () => {
     })
   })
 
+  describe('delete_conversation', () => {
+    it('is expected to issue a DELETE to /conversations/{id} and report success', async () => {
+      freescout.respondWith({ status: 204 })
+
+      const result = await loopback.callTool('delete_conversation', { conversationId: 100 })
+
+      expect(freescout.lastRequest()?.method).toBe('DELETE')
+      expect(freescout.lastRequest()?.path).toBe('/api/conversations/100')
+      const text = (result.content[0] as { text: string }).text
+      expect(text).toContain('Permanently deleted conversation #100')
+      expect(text).toContain('cannot be reversed')
+      expect(result.structuredContent).toEqual({ conversationId: 100, deleted: true })
+    })
+  })
+
   describe('update_conversation_custom_fields', () => {
     it('is expected to PUT /conversations/{id}/custom_fields with the supplied field values', async () => {
       freescout.respondWith({ status: 204 })
