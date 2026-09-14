@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { CustomerSummarySchema } from '../customers'
-import { createPaginatedSchema, NullableStringSchema, ResourceIdSchema } from '../shared'
+import { createPaginatedSchema, NullableStringSchema, RecipientListSchema, ResourceIdSchema } from '../shared'
 import { TagSchema } from '../tags'
 import { UserSummarySchema } from '../users'
 
@@ -59,9 +59,9 @@ export const ThreadSchema = z.looseObject({
   customer: CustomerSummarySchema.nullish(),
   createdBy: z.union([UserSummarySchema, CustomerSummarySchema]).nullish(),
   assignedTo: UserSummarySchema.nullish(),
-  to: z.array(z.string()).nullish(),
-  cc: z.array(z.string()).nullish(),
-  bcc: z.array(z.string()).nullish(),
+  to: RecipientListSchema.nullish(),
+  cc: RecipientListSchema.nullish(),
+  bcc: RecipientListSchema.nullish(),
   createdAt: NullableStringSchema,
   openedAt: NullableStringSchema,
   rating: z.number().nullish(),
@@ -94,8 +94,8 @@ export const ConversationSchema = z.looseObject({
   userUpdatedAt: NullableStringSchema,
   customerWaitingSince: CustomerWaitingSinceSchema,
   source: SourceSchema,
-  cc: z.array(z.string()).nullish(),
-  bcc: z.array(z.string()).nullish(),
+  cc: RecipientListSchema.nullish(),
+  bcc: RecipientListSchema.nullish(),
   customer: CustomerSummarySchema.nullish(),
   customFields: z.array(CustomFieldValueSchema).nullish(),
   _embedded: z.looseObject({

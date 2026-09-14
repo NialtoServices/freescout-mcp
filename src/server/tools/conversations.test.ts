@@ -145,6 +145,47 @@ describe('conversation tools', () => {
       const text = (result.content[0] as { text: string }).text
       expect(text).toContain('# Conversation #1001')
     })
+
+    it('is expected to tolerate conversation `cc` and `bcc` arriving as objects (PHP json_encode quirk)', async () => {
+      freescout.respondWith({
+        body: {
+          ...minimalConversation,
+          cc: { '0': 'alice@example.com', '2': 'bob@example.com' },
+          bcc: { '1': 'carol@example.com' }
+        }
+      })
+
+      const result = await loopback.callTool('get_conversation', { conversationId: 100 })
+
+      expect(result.isError).toBeFalsy()
+      const text = (result.content[0] as { text: string }).text
+      expect(text).toContain('# Conversation #1001')
+    })
+
+    it('is expected to render thread `cc` and `bcc` that arrive as objects (PHP json_encode quirk)', async () => {
+      freescout.respondWith({
+        body: {
+          ...minimalConversation,
+          _embedded: {
+            threads: [
+              {
+                ...minimalThread,
+                to: { '1': 'dave@example.com' },
+                cc: { '0': 'alice@example.com', '2': 'bob@example.com' },
+                bcc: { '3': 'carol@example.com' }
+              }
+            ]
+          }
+        }
+      })
+
+      const result = await loopback.callTool('get_conversation', { conversationId: 100 })
+
+      expect(result.isError).toBeFalsy()
+      const text = (result.content[0] as { text: string }).text
+      expect(text).toContain('- CC: alice@example.com, bob@example.com')
+      expect(text).toContain('- BCC: carol@example.com')
+    })
   })
 
   describe('create_conversation', () => {
