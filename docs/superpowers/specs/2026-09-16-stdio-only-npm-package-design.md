@@ -89,9 +89,12 @@ multi-model-mcp.
 |---|---|
 | `build` | esbuild bundle of `src/index.ts` to `dist/freescout-mcp.js` |
 | `typecheck` | `tsc` (the current `build`) |
-| `cli` | unchanged — `node --import tsx src/index.ts` |
+| `cli` | `npm run build && node dist/freescout-mcp.js` |
 | `prepublishOnly` | `typecheck`, `test`, then `build` |
 | `test`, `format`, `format:check` | unchanged |
+
+`tsx` cannot import `.md` files, so once `INSTRUCTIONS.md` is imported as text the source no longer
+runs under `tsx`. `cli` runs the bundle instead, and `tsx` is removed.
 
 ### Bundle constraints
 
