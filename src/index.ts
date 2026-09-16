@@ -1,16 +1,16 @@
 import { Command } from 'commander'
-import { registerStdioCommand } from './cli/stdio'
+import { configureStdioCommand } from './cli/stdio'
 
 /**
- * Creates the command-line interface for serving the MCP resource server.
+ * Creates the command-line interface that starts the stdio MCP server.
  *
  * @returns Configured CLI command.
  */
 function createProgram(): Command {
   const program = new Command()
-  program.name('freescout-mcp').description('FreeScout MCP command-line interface')
+  program.name('freescout-mcp').description('FreeScout MCP server (single-user, JSON-RPC over stdin/stdout)')
 
-  registerStdioCommand(program)
+  configureStdioCommand(program)
 
   return program
 }

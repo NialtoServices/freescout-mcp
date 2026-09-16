@@ -1,11 +1,11 @@
 import { StdioServerTransport } from '@modelcontextprotocol/server'
 import { Command, Option } from 'commander'
 import { UserResolver } from '../authentication'
+import { Client } from '../lib/freescout'
 import { createMCPServer } from '../server'
-import { addFreeScoutClientOptions, createFreeScoutClient, FreeScoutClientCommandOptions } from './shared'
 
-/** Options for the `stdio` command. */
-interface StdioCommandOptions extends FreeScoutClientCommandOptions {
+/** Options accepted by the stdio MCP server command. */
+interface StdioCommandOptions {
   /**
    * Email address identifying the calling FreeScout user.
    *
@@ -14,28 +14,42 @@ interface StdioCommandOptions extends FreeScoutClientCommandOptions {
    * to populate `byUser` attribution against FreeScout will resolve this email to a FreeScout user.
    */
   freescoutUserEmail: string
+
+  /** FreeScout API base URL (e.g. `https://help.example.com/api`). */
+  freescoutApiUrl: string
+
+  /** FreeScout API key with sufficient scope for the registered MCP tools. */
+  freescoutApiKey: string
 }
 
 /**
- * Registers the stdio MCP server command.
+ * Configures a command to start the stdio MCP server (single-user, JSON-RPC over stdin/stdout).
  *
- * @param program Parent command.
+ * Adds the `--freescout-user-email`, `--freescout-api-url` and `--freescout-api-key` options. All
+ * three are mandatory and can be supplied via the matching environment variables.
+ *
+ * @param command Command to configure, typically the program root.
  */
-export function registerStdioCommand(program: Command): void {
-  const command = program
-    .command('stdio')
-    .description('Start the stdio MCP server (single-user, JSON-RPC over stdin/stdout)')
+export function configureStdioCommand(command: Command): void {
+  command
     .addOption(
       new Option('--freescout-user-email <email>', 'email address of the calling FreeScout user')
         .env('FREESCOUT_USER_EMAIL')
         .makeOptionMandatory()
     )
-
-  addFreeScoutClientOptions(command).action((options: StdioCommandOptions) => runStdioServer(options))
+    .addOption(
+      new Option('--freescout-api-url <url>', 'FreeScout API URL (e.g. https://freescout.example.com/api)')
+        .env('FREESCOUT_API_URL')
+        .makeOptionMandatory()
+    )
+    .addOption(
+      new Option('--freescout-api-key <key>', 'FreeScout API key').env('FREESCOUT_API_KEY').makeOptionMandatory()
+    )
+    .action((options: StdioCommandOptions) => runStdioServer(options))
 }
 
 async function runStdioServer(options: StdioCommandOptions): Promise<void> {
-  const client = createFreeScoutClient(options)
+  const client = new Client({ baseUrl: options.freescoutApiUrl, key: options.freescoutApiKey })
   // Resolve the configured email once at startup. Failing here surfaces a misconfigured CLI flag
   // (e.g. an email with no matching FreeScout account) before the process accepts any tool calls,
   // rather than failing on the first tool invocation.
