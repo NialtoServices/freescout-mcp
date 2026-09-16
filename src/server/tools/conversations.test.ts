@@ -68,6 +68,15 @@ describe('conversation tools', () => {
     await freescout.stop()
   })
 
+  describe('tools/list', () => {
+    it('is expected to publish output schemas for tools whose results contain recipient lists', async () => {
+      const tools = await loopback.listTools()
+
+      const draftReplyTool = tools.find((tool) => tool.name === 'draft_conversation_reply')
+      expect(draftReplyTool?.outputSchema).toBeDefined()
+    })
+  })
+
   describe('list_conversations', () => {
     it('is expected to GET /conversations and surface the parsed listing', async () => {
       freescout.respondWith({
