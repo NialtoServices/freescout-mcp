@@ -1,13 +1,7 @@
-import { type ServerContext } from '@modelcontextprotocol/server'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Client } from '../lib/freescout'
 import { startFixtureServer, type FixtureServer } from '../test/fixture-server'
-import { AuthenticationError, extractEmail, readUserFromContext, UserResolver } from './freescout'
-
-/** Builds a minimal `ServerContext`-shaped value carrying only the fields the functions under test read. */
-function makeContext(extra: unknown | undefined): ServerContext {
-  return { http: extra === undefined ? undefined : { authInfo: { extra } } } as unknown as ServerContext
-}
+import { AuthenticationError, UserResolver } from './freescout'
 
 const minimalUser = {
   id: 7,
@@ -24,54 +18,6 @@ const minimalUser = {
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-02T00:00:00Z'
 }
-
-describe('extractEmail', () => {
-  it('is expected to return the email from a context carrying a string email in authInfo.extra', () => {
-    expect(extractEmail(makeContext({ email: 'ada@example.com' }))).toBe('ada@example.com')
-  })
-
-  it('is expected to throw when no http authentication metadata is attached to the context', () => {
-    expect(() => extractEmail(makeContext(undefined))).toThrow(AuthenticationError)
-  })
-
-  it('is expected to throw when authInfo.extra is null', () => {
-    expect(() => extractEmail(makeContext(null))).toThrow(AuthenticationError)
-  })
-
-  it('is expected to throw when authInfo.extra has no email key', () => {
-    expect(() => extractEmail(makeContext({}))).toThrow(AuthenticationError)
-  })
-
-  it('is expected to throw when the email value is the empty string', () => {
-    expect(() => extractEmail(makeContext({ email: '' }))).toThrow(AuthenticationError)
-  })
-
-  it('is expected to throw when the email value is not a string', () => {
-    expect(() => extractEmail(makeContext({ email: 42 }))).toThrow(AuthenticationError)
-  })
-})
-
-describe('readUserFromContext', () => {
-  it('is expected to return the user attached to authInfo.extra.user', () => {
-    expect(readUserFromContext(makeContext({ user: minimalUser }))).toBe(minimalUser)
-  })
-
-  it('is expected to throw when no http authentication metadata is attached', () => {
-    expect(() => readUserFromContext(makeContext(undefined))).toThrow(AuthenticationError)
-  })
-
-  it('is expected to throw when authInfo.extra has no user key', () => {
-    expect(() => readUserFromContext(makeContext({ email: 'ada@example.com' }))).toThrow(AuthenticationError)
-  })
-
-  it('is expected to throw when authInfo.extra.user is not an object', () => {
-    expect(() => readUserFromContext(makeContext({ user: 'ada@example.com' }))).toThrow(AuthenticationError)
-  })
-
-  it('is expected to throw when authInfo.extra.user lacks a numeric id', () => {
-    expect(() => readUserFromContext(makeContext({ user: { email: 'ada@example.com' } }))).toThrow(AuthenticationError)
-  })
-})
 
 describe('UserResolver', () => {
   let server: FixtureServer

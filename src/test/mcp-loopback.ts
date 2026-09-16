@@ -1,5 +1,4 @@
 import type {
-  AuthInfo,
   CallToolResult,
   JSONRPCMessage,
   ListToolsResult,
@@ -11,11 +10,8 @@ import type {
 
 /** A handle to a running in-process MCP loopback connecting a test to an `McpServer`. */
 export interface McpLoopback {
-  /**
-   * Invokes a registered tool by name and returns its `CallToolResult`. Pass `authInfo` to
-   * simulate a request that the HTTP transport would have enriched with a resolved FreeScout user.
-   */
-  callTool(name: string, args: Record<string, unknown>, options?: { authInfo?: AuthInfo }): Promise<CallToolResult>
+  /** Invokes a registered tool by name and returns its `CallToolResult`. */
+  callTool(name: string, args: Record<string, unknown>): Promise<CallToolResult>
 
   /** Lists every tool the server has registered. */
   listTools(): Promise<Tool[]>
@@ -63,17 +59,13 @@ export async function startMcpLoopback(server: McpServer): Promise<McpLoopback> 
   await server.connect(transport)
 
   /** Sends a JSON-RPC request to the server and awaits the matching response. */
-  function sendRequest<TResult>(
-    method: string,
-    params: Record<string, unknown>,
-    extra?: { authInfo?: AuthInfo }
-  ): Promise<TResult> {
+  function sendRequest<TResult>(method: string, params: Record<string, unknown>): Promise<TResult> {
     const id = nextRequestId++
     const message: JSONRPCMessage = { jsonrpc: '2.0', id, method, params }
 
     return new Promise<TResult>((resolve, reject) => {
       pending.set(id, { resolve: (value) => resolve(value as TResult), reject })
-      transport.onmessage?.(message, extra)
+      transport.onmessage?.(message)
     })
   }
 
@@ -92,8 +84,8 @@ export async function startMcpLoopback(server: McpServer): Promise<McpLoopback> 
   sendNotification('notifications/initialized')
 
   return {
-    async callTool(name, args, options) {
-      return sendRequest<CallToolResult>('tools/call', { name, arguments: args }, options)
+    async callTool(name, args) {
+      return sendRequest<CallToolResult>('tools/call', { name, arguments: args })
     },
     async listTools() {
       const result = await sendRequest<ListToolsResult>('tools/list', {})

@@ -1,5 +1,4 @@
 import { Command } from 'commander'
-import { registerServerCommand } from './cli/server'
 import { registerStdioCommand } from './cli/stdio'
 
 /**
@@ -11,7 +10,6 @@ function createProgram(): Command {
   const program = new Command()
   program.name('freescout-mcp').description('FreeScout MCP command-line interface')
 
-  registerServerCommand(program)
   registerStdioCommand(program)
 
   return program

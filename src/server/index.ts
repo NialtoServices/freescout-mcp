@@ -8,15 +8,11 @@ import { registerTools } from './tools'
 /** Options influencing how the MCP server resolves per-request identity and other context. */
 export interface CreateMCPServerOptions {
   /**
-   * Returns the FreeScout user associated with the current request.
+   * Returns the FreeScout user the server acts as.
    *
-   * Resolution is performed by the transport entry point before the tool handler runs (HTTP injects
-   * the user into the request's `authInfo`; stdio resolves once at startup). Tools that need
+   * The entry point resolves the user once at startup, before any tool handler runs. Tools that need
    * caller identity (e.g. for `byUser` attribution) can call this synchronously; tools that don't
    * can ignore it.
-   *
-   * @throws When no resolved user is attached to the request context. This indicates a transport
-   *   wiring bug and should never occur in correctly-configured deployments.
    */
   getCurrentUser: (context: ServerContext) => User
 }

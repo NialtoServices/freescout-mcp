@@ -1,4 +1,3 @@
-import { type ServerContext } from '@modelcontextprotocol/server'
 import { Client, type User } from '../lib/freescout'
 
 /** Thrown when an error occurs during the authentication process. */
@@ -7,45 +6,6 @@ export class AuthenticationError extends Error {
     super(message)
     this.name = 'AuthenticationError'
   }
-}
-
-/**
- * Extracts the email address from the OAuth bearer token claims attached to an MCP request.
- *
- * @param context The MCP request context.
- * @returns The email address extracted from the token claims.
- * @throws {AuthenticationError} When no authentication metadata or email is present.
- */
-export function extractEmail(context: ServerContext): string {
-  const extra = context.http?.authInfo?.extra
-  if (typeof extra !== 'object' || extra === null) {
-    throw new AuthenticationError('No authentication metadata attached to request')
-  }
-
-  const email = extra.email
-  if (typeof email !== 'string' || email === '') {
-    throw new AuthenticationError('No email found in authentication metadata')
-  }
-
-  return email
-}
-
-/**
- * Reads the resolved FreeScout user from the MCP request context's `authInfo.extra.user`. The HTTP
- * transport entry point places the user there after successful verification; this helper centralises
- * the runtime-checked read so call sites don't have to cast through the SDK's untyped `extra`.
- *
- * @param context The MCP request context.
- * @returns The FreeScout user attached to the request.
- * @throws {AuthenticationError} When no resolved user is attached. This indicates a transport
- *   wiring bug rather than a normal authentication failure.
- */
-export function readUserFromContext(context: ServerContext): User {
-  const candidate = context.http?.authInfo?.extra?.user
-  if (!candidate || typeof candidate !== 'object' || !('id' in candidate) || typeof candidate.id !== 'number') {
-    throw new AuthenticationError('No resolved FreeScout user attached to request context')
-  }
-  return candidate as User
 }
 
 /**
