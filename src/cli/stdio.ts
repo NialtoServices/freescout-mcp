@@ -7,11 +7,10 @@ import { createMCPServer } from '../server'
 /** Options accepted by the stdio MCP server command. */
 interface StdioCommandOptions {
   /**
-   * Email address identifying the calling FreeScout user.
+   * Email address identifying the FreeScout user the server acts as.
    *
-   * Stdio is a single-user transport: there is no per-request authentication context, so the email
-   * is supplied once at process startup and reused for every tool invocation. Write tools that need
-   * to populate `byUser` attribution against FreeScout will resolve this email to a FreeScout user.
+   * The email is resolved to a FreeScout user once at startup, and that user is reused for every
+   * tool invocation: as the author of notes and drafts, and as `byUser` on updates.
    */
   freescoutUserEmail: string
 

@@ -9,9 +9,8 @@ export class AuthenticationError extends Error {
 }
 
 /**
- * Resolves verified email addresses to FreeScout users, caching successful lookups for a
- * configurable TTL. Failed lookups are not cached, so an offboarding can be remediated by
- * re-onboarding the same email at any time.
+ * Resolves email addresses to FreeScout users, caching successful lookups for a configurable TTL.
+ * Failed lookups are not cached, so a later lookup finds a user created after the failure.
  */
 export class UserResolver {
   /** Cached successful resolutions, keyed by email address. */

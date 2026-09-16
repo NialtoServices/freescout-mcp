@@ -4,7 +4,7 @@ import { version } from '../../package.json'
 import { type Client, type User } from '../lib/freescout'
 import { registerTools } from './tools'
 
-/** Options influencing how the MCP server resolves per-request identity and other context. */
+/** Options supplying the MCP server with the FreeScout user it acts as. */
 export interface CreateMCPServerOptions {
   /**
    * Returns the FreeScout user the server acts as.
@@ -20,7 +20,7 @@ export interface CreateMCPServerOptions {
  * Builds the MCP server for the given FreeScout client and identity-resolution options.
  *
  * @param client FreeScout API client used by registered tools.
- * @param options Identity resolver and other transport-injected context.
+ * @param options Supplies the FreeScout user the server acts as.
  * @returns Configured MCP server ready to be connected to a transport.
  */
 const INSTRUCTIONS_RESOURCE_URI = 'freescout-mcp://instructions'

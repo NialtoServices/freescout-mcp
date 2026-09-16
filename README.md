@@ -69,7 +69,7 @@ All three settings are required. Each can be passed as a flag or through its env
 
 FreeScout's API itself only exposes a single instance-wide API key with no per-user identity. To attribute writes (notes, drafts, status changes) to a real person, the server looks `FREESCOUT_USER_EMAIL` up against `GET /api/users` once at startup, and exits with an error if no FreeScout user matches.
 
-The resolved user is injected into the tool's request context. Tools that author content (`create_conversation`, `add_conversation_note`, `draft_conversation_reply`) attach it as the author; `update_conversation` forwards it as `byUser` so the timeline records who did what.
+Every tool invocation uses that resolved user. Tools that author content (`create_conversation`, `add_conversation_note`, `draft_conversation_reply`) attach it as the author; `update_conversation` forwards it as `byUser` so the timeline records who did what.
 
 ## Development
 

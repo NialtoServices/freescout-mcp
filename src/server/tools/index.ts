@@ -10,7 +10,7 @@ import { registerUserTools } from './users'
 /**
  * Registers every MCP tool against `server`.
  *
- * `options` carries transport-injected context (e.g. the per-request identity resolver) and is
+ * `options` carries transport-injected context (e.g. the acting FreeScout user) and is
  * threaded through to each tool group so write tools can resolve the calling FreeScout user.
  * Read-only tools ignore it.
  */
