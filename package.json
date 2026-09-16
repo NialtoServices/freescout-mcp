@@ -1,7 +1,7 @@
 {
   "name": "@nialtoservices/freescout-mcp",
   "version": "1.3.1",
-  "description": "An HTTP-based MCP server that provides access to FreeScout via the API module.",
+  "description": "A stdio MCP server that provides access to FreeScout via the API module.",
   "author": "Toby Herbert",
   "keywords": [
     "freescout",
@@ -10,27 +10,39 @@
   "license": "MIT",
   "repository": "https://github.com/nialtoservices/freescout-mcp",
   "type": "module",
+  "bin": {
+    "freescout-mcp": "./dist/freescout-mcp.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "build": "tsc",
-    "cli": "node --import tsx src/index.ts",
+    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --loader:.md=text --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\" --outfile=dist/freescout-mcp.js",
+    "cli": "npm run build && node dist/freescout-mcp.js",
     "format": "prettier --write 'src/**/*.ts'",
     "format:check": "prettier --check 'src/**/*.ts'",
-    "test": "vitest run"
-  },
-  "dependencies": {
-    "@cfworker/json-schema": "^4.1.1",
-    "@modelcontextprotocol/server": "^2.0.0-alpha.2",
-    "commander": "^14.0.3",
-    "luxon": "^3.7.2",
-    "tsx": "^4.21.0",
-    "zod": "^4.3.6"
+    "prepublishOnly": "npm run typecheck && npm test && npm run build",
+    "test": "vitest run",
+    "typecheck": "tsc"
   },
   "devDependencies": {
+    "@cfworker/json-schema": "^4.1.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+    "@modelcontextprotocol/server": "^2.0.0-alpha.2",
     "@types/luxon": "^3.7.1",
     "@types/node": "^25.5.0",
+    "commander": "^14.0.3",
+    "esbuild": "^0.28.2",
+    "luxon": "^3.7.2",
     "prettier": "^3.8.3",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.5",
+    "zod": "^4.3.6"
   }
 }
