@@ -34,7 +34,7 @@
   "devDependencies": {
     "@cfworker/json-schema": "^4.1.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
-    "@modelcontextprotocol/server": "^2.0.0-alpha.2",
+    "@modelcontextprotocol/server": "^2.4.0",
     "@types/luxon": "^3.7.6",
     "@types/node": "^25.9.9",
     "commander": "^14.0.3",

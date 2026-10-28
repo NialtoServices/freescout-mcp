@@ -1,4 +1,4 @@
-import { StdioServerTransport } from '@modelcontextprotocol/server'
+import { StdioServerTransport } from '@modelcontextprotocol/server/stdio'
 import { Command, Option } from 'commander'
 import { UserResolver } from '../authentication'
 import { Client } from '../lib/freescout'
