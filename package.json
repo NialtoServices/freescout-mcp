@@ -23,7 +23,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --loader:.md=text --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\" --outfile=dist/freescout-mcp.js",
+    "build": "esbuild src/index.ts --bundle --minify --keep-names --platform=node --format=esm --loader:.md=text --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\" --outfile=dist/freescout-mcp.js",
     "cli": "npm run build && node dist/freescout-mcp.js",
     "format": "prettier --write 'src/**/*.ts'",
     "format:check": "prettier --check 'src/**/*.ts'",
