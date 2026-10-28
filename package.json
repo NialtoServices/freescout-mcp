@@ -17,13 +17,13 @@
     "dist"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --minify --keep-names --platform=node --format=esm --loader:.md=text --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\" --outfile=dist/freescout-mcp.js",
+    "build": "esbuild src/index.ts --bundle --minify --keep-names --platform=node --target=node22 --format=esm --loader:.md=text --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\" --outfile=dist/freescout-mcp.js",
     "cli": "npm run build && node dist/freescout-mcp.js",
     "format": "prettier --write 'src/**/*.ts'",
     "format:check": "prettier --check 'src/**/*.ts'",
@@ -36,7 +36,7 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "@modelcontextprotocol/server": "^2.4.0",
     "@types/luxon": "^3.7.6",
-    "@types/node": "^25.9.9",
+    "@types/node": "^22.20.5",
     "commander": "^15.0.0",
     "esbuild": "^0.28.2",
     "luxon": "^3.7.2",

@@ -25,7 +25,7 @@ Cross-cutting guidance for the AI — conversation states, common request patter
 
 ## Quick start
 
-Requires Node.js 20 or later on the machine running the MCP client.
+Requires Node.js 22 or later on the machine running the MCP client.
 
 ### Claude Desktop
 
@@ -73,7 +73,7 @@ Every tool invocation uses that resolved user. Tools that author content (`creat
 
 ## Development
 
-Requirements: Node.js 20+ and npm.
+Requirements: Node.js 22+ and npm.
 
 ```bash
 npm install
