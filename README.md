@@ -73,15 +73,15 @@ Every tool invocation uses that resolved user. Tools that author content (`creat
 
 ## Development
 
-Requirements: Node.js 22+ and npm.
+Requirements: Node.js 22+ and pnpm.
 
 ```bash
-npm install
-npm test                # vitest, no mocks (HTTP fixture-server + in-process MCP loopback)
-npm run typecheck       # tsc
-npm run build           # esbuild → dist/freescout-mcp.js
-npm run cli -- --help   # build, then run the bundled server
-npm run format          # prettier
+pnpm install
+pnpm test               # vitest, no mocks (HTTP fixture-server + in-process MCP loopback)
+pnpm typecheck          # tsc
+pnpm build              # esbuild → dist/freescout-mcp.js
+pnpm cli --help         # build, then run the bundled server
+pnpm format             # prettier
 ```
 
 Tests use a real in-process HTTP fixture-server for FreeScout API interactions and a paired in-process MCP transport (`src/test/mcp-loopback.ts`) for end-to-end tool calls — no mocks.
@@ -91,7 +91,7 @@ The build is a single esbuild bundle because the source's extension-less and dir
 ### Publishing
 
 ```bash
-npm publish
+pnpm publish
 ```
 
 `prepublishOnly` runs the type check, the tests and the build first, so the published bundle always comes from a passing tree.
