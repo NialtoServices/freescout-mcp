@@ -171,6 +171,26 @@ describe('conversation tools', () => {
       expect(text).toContain('# Conversation #1001')
     })
 
+    it("is expected to list the conversation's CCs", async () => {
+      freescout.respondWith({ body: { ...minimalConversation, cc: ['alice@example.com', 'bob@example.com'] } })
+
+      const result = await loopback.callTool('get_conversation', { conversationId: 100 })
+
+      const text = (result.content[0] as { text: string }).text
+      expect(text).toContain('- CC: alice@example.com, bob@example.com')
+    })
+
+    describe('when the conversation has no CCs', () => {
+      it('is expected to say so', async () => {
+        freescout.respondWith({ body: minimalConversation })
+
+        const result = await loopback.callTool('get_conversation', { conversationId: 100 })
+
+        const text = (result.content[0] as { text: string }).text
+        expect(text).toContain('- CC: None')
+      })
+    })
+
     it('is expected to render thread `cc` and `bcc` that arrive as objects (PHP json_encode quirk)', async () => {
       freescout.respondWith({
         body: {

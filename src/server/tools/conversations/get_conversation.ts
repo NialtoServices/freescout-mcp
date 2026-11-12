@@ -80,6 +80,7 @@ export function register(server: McpServer, client: FreeScoutClient, _options: C
           { label: 'Mailbox ID', value: conversation.mailboxId },
           { label: 'Folder ID', value: conversation.folderId },
           { label: 'Customer', value: renderParticipant(conversation.customer) },
+          { label: 'CC', value: conversation.cc?.length ? conversation.cc : 'None' },
           { label: 'Assignee', value: renderParticipant(conversation.assignee) },
           { label: 'Created At', value: parseDateTime(conversation.createdAt) },
           { label: 'Updated At', value: parseDateTime(conversation.updatedAt) },

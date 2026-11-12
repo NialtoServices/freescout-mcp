@@ -30,7 +30,7 @@ export function register(server: McpServer, client: FreeScoutClient, options: Cr
           .array(z.email())
           .optional()
           .describe(
-            "CC recipients for the draft, replacing the conversation's existing CCs. Omit to keep the conversation's CCs; pass an empty array for no CCs."
+            "CC recipients for the draft, replacing the conversation's existing CCs. Omit to keep the conversation's CCs; pass an empty array for no CCs. To remove only some CCs, read the current list with `get_conversation` and pass the addresses to keep. The customer is never CC'd, since the reply is already addressed to them."
           )
       }),
       outputSchema: z.object({ conversationId: z.number(), thread: ThreadSchema, state: z.literal('draft') })
