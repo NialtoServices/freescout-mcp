@@ -248,12 +248,15 @@ describe('conversation tools', () => {
   })
 
   describe('draft_conversation_reply', () => {
+    const draftThreadResponse = {
+      status: 201,
+      headers: { 'Resource-ID': '999' },
+      body: { ...minimalThread, id: 999, type: 'message', state: 'draft' }
+    }
+
     it('is expected to POST a draft message thread (never published) authored by the current user', async () => {
-      freescout.respondWith({
-        status: 201,
-        headers: { 'Resource-ID': '999' },
-        body: { ...minimalThread, id: 999, type: 'message', state: 'draft' }
-      })
+      freescout.respondWith({ body: minimalConversation })
+      freescout.respondWith(draftThreadResponse)
 
       const result = await loopback.callTool('draft_conversation_reply', {
         conversationId: 100,
@@ -275,17 +278,64 @@ describe('conversation tools', () => {
     })
 
     it('is expected never to send `state: "published"` regardless of input', async () => {
-      freescout.respondWith({
-        status: 201,
-        headers: { 'Resource-ID': '999' },
-        body: { ...minimalThread, id: 999, type: 'message', state: 'draft' }
-      })
+      freescout.respondWith({ body: minimalConversation })
+      freescout.respondWith(draftThreadResponse)
 
       // The tool has no `send`/`state` parameter, so there's no way to even ask for `published`.
       // This test pins that contract: the outbound body always carries state: 'draft'.
       await loopback.callTool('draft_conversation_reply', { conversationId: 100, text: 'x' })
 
       expect(JSON.parse(freescout.lastRequest()?.body ?? '{}').state).toBe('draft')
+    })
+
+    describe('when no `cc` is given', () => {
+      it("is expected to CC the draft to the conversation's existing CCs", async () => {
+        freescout.respondWith({
+          body: { ...minimalConversation, cc: ['bob@example.com', 'carol@example.com'] }
+        })
+        freescout.respondWith(draftThreadResponse)
+
+        await loopback.callTool('draft_conversation_reply', { conversationId: 100, text: 'x' })
+
+        expect(JSON.parse(freescout.lastRequest()?.body ?? '{}').cc).toEqual(['bob@example.com', 'carol@example.com'])
+      })
+
+      it('is expected not to CC the customer the reply is already addressed to', async () => {
+        freescout.respondWith({
+          body: {
+            ...minimalConversation,
+            customer: { id: 7, type: 'customer', firstName: 'Grace', lastName: 'Hopper', email: 'grace@example.com' },
+            cc: ['Grace@Example.com', 'bob@example.com']
+          }
+        })
+        freescout.respondWith(draftThreadResponse)
+
+        await loopback.callTool('draft_conversation_reply', { conversationId: 100, text: 'x' })
+
+        expect(JSON.parse(freescout.lastRequest()?.body ?? '{}').cc).toEqual(['bob@example.com'])
+      })
+    })
+
+    describe('when `cc` is given', () => {
+      it("is expected to use it in place of the conversation's CCs", async () => {
+        freescout.respondWith(draftThreadResponse)
+
+        await loopback.callTool('draft_conversation_reply', {
+          conversationId: 100,
+          text: 'x',
+          cc: ['dave@example.com']
+        })
+
+        expect(JSON.parse(freescout.lastRequest()?.body ?? '{}').cc).toEqual(['dave@example.com'])
+      })
+
+      it('is expected to send no CCs when it is empty', async () => {
+        freescout.respondWith(draftThreadResponse)
+
+        await loopback.callTool('draft_conversation_reply', { conversationId: 100, text: 'x', cc: [] })
+
+        expect(JSON.parse(freescout.lastRequest()?.body ?? '{}').cc).toEqual([])
+      })
     })
   })
 

@@ -42,8 +42,9 @@ export interface FixtureServer {
   lastRequest(): FixtureRequest | undefined
 
   /**
-   * Queues a response for the next incoming request. The response is consumed once received, so
-   * tests that issue several requests must call `respondWith` once per request.
+   * Queues a response for a future incoming request. Responses are served in the order they were
+   * queued and each is consumed once received, so tests that issue several requests must call
+   * `respondWith` once per request, in request order.
    */
   respondWith(response: FixtureResponse): void
 
@@ -59,7 +60,7 @@ export interface FixtureServer {
  * @returns A handle to the running server, including the base URL to configure the client with.
  */
 export async function startFixtureServer(): Promise<FixtureServer> {
-  let pendingResponse: FixtureResponse | undefined
+  const pendingResponses: FixtureResponse[] = []
   let lastRequest: FixtureRequest | undefined
 
   const server: Server = createServer((request: IncomingMessage, response: ServerResponse) => {
@@ -73,6 +74,8 @@ export async function startFixtureServer(): Promise<FixtureServer> {
         body: Buffer.concat(chunks).toString('utf8')
       }
 
+      const pendingResponse = pendingResponses.shift()
+
       // If a test forgot to queue a response we fail loudly rather than silently returning 200.
       if (!pendingResponse) {
         response.statusCode = 500
@@ -82,7 +85,6 @@ export async function startFixtureServer(): Promise<FixtureServer> {
       }
 
       const { status = 200, headers = {}, body } = pendingResponse
-      pendingResponse = undefined
 
       response.statusCode = status
 
@@ -123,7 +125,7 @@ export async function startFixtureServer(): Promise<FixtureServer> {
     url,
     lastRequest: () => lastRequest,
     respondWith: (response) => {
-      pendingResponse = response
+      pendingResponses.push(response)
     },
     stop: () =>
       new Promise<void>((resolve, reject) => {
